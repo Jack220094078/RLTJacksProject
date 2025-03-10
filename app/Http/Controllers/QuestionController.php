@@ -27,4 +27,8 @@ class QuestionController extends Controller
         ]);
         return redirect()->route('Q&A')->with('success','question_created');
     }
+    public function single_question($id) {
+        $question = Question::find($id);
+        return view('question',compact('question'));
+    }
 }

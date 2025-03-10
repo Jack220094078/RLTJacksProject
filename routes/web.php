@@ -14,6 +14,7 @@ Route::name("Q&A")->group(function () {
     Route::get("/questions", [QuestionController::class,"index"]);
     Route::get("/questions/create", [QuestionController::class,"create"]) ->name(".create") -> middleware("auth");
     Route::post("/questions/submit",[QuestionController::class,"submit"]) ->name(".submit");
+    Route::get("/questions/{id?}", [QuestionController::class,"single_question"]) ->name(".question");
 });
 Route::get('/joinroom', function () {
     return view('joinroom');

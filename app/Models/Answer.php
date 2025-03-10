@@ -11,13 +11,15 @@ class Answer extends Model
     //
     protected $fillable = [
         'question_id',
-        'wrong_answer1',
-        'correct_answer',
-        'wrong_answer2',
+        'answer',
+        'user_id',
 
     ];
     // Relationship to User 
     public function question() {
         return $this->belongTo(Question::class);
+    }
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }

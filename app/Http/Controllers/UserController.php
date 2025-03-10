@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -35,7 +36,7 @@ class UserController extends Controller
             'email'=> $request['email'],
             'password'=> bcrypt($request['password']),
         ]);
-        return redirect()->back()->with('success','Account Created');
+        return redirect()->route("users.login")->with('success','Account Created');
 
     }
     public function login(Request $request) {

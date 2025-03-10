@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
+    protected $table = 'question';
     use HasFactory;
     //
     protected $fillable = [
         'user_id',
         'questiontext',
+        'upVotes',
+        'questionbody',
     ];
     // Relationship to User 
     public function user() {

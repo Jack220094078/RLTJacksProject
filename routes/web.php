@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -8,6 +9,11 @@ Route::name('users')->group(function () {
     Route::post("/register", [UserController::class,"create"])->name(".register");
     Route::post("/login", [UserController::class,"login"])->name(".login");
     Route::post("/logout", [UserController::class,"logout"])->name(".logout");
+});
+Route::name("Q&A")->group(function () {
+    Route::get("/questions", [QuestionController::class,"index"]);
+    Route::get("/questions/create", [QuestionController::class,"create"]) ->name(".create") -> middleware("auth");
+    Route::post("/questions/submit",[QuestionController::class,"submit"]) ->name(".submit");
 });
 Route::get('/joinroom', function () {
     return view('joinroom');
@@ -21,9 +27,6 @@ Route::get('/modules', function () {
 Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
-Route::get('/qanda', function () {
-    return view('q_and_a');
-})->name('Q&A');
 Route::get('/register', function () {
     return view('register');
 })->name('register');

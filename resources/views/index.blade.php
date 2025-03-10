@@ -1,9 +1,4 @@
 @include('layouts.header')
-isset('$users')
-<?php if (isset($users)): ?>
-    <p><?php echo $users; ?></p>
-    <?php endif; ?>
-
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
                 @include('layouts.navigation')

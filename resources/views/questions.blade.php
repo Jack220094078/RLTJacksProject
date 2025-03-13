@@ -13,14 +13,14 @@
                                   +
                              </a>
                             </div>
-                            <section class="position-relative py-4 py-xl-5">
+                            <section class="position-relative py-4 py-xl-5 d-flex flex-column align-items-center">
                                 @if (isset($questions)&& $questions->count() > 0)
     @foreach ( $questions as $question )
     <div class="container position-relative">
         <a class="text-decoration-none" href="{{ route("Q&A.question",['id' => $question -> id]) }}">
                                         <div class="row d-flex justify-content-center">
-                                            <div class="col">
-                                                <div class="card shadow border-left-primary py-2" style="margin-right: 2px;width: 900px;height: 175px;">
+                                
+                                                <div class="card shadow border-left-primary py-2 col-md-11" style="margin-right: 2px;">
                                                     <div class="card-body d-flex align-items-center">
                                                             <div class="d-flex flex-column align-items-center align-self-center me-3">
                                                                 <button class="btn btn-outline-secondary btn-sm">
@@ -33,12 +33,12 @@
                                                             </div>
                                                             <div>
                                                                 <h1 style="font-size: 25px;color: var(--bs-emphasis-color);font-weight: bold;height: 80px;">{{ $question -> questiontext }}</h1>
-                                                                <strong>101</strong><span style="color: var(--bs-emphasis-color);"><strong>Answers</strong></span></span></div>
+                                                                <strong>{{ $question -> answer_count }}</strong><span style="color: var(--bs-emphasis-color);"><strong> Answers</strong></span></span></div>
                                                             </div>
                                                         <div>
                                                         </div>
                                                 </div>
-                                            </div>
+                                           
                                             <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4">
                                                 <div class="card mb-5"></div>
                                             </div>
@@ -49,6 +49,7 @@
                                 @else
                                 <p>No Questions Available</p>
                                 @endif
+                                {{ $questions ->links() }}
                             </section>
                         </div>
                     </div>

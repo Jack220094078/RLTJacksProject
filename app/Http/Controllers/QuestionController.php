@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class QuestionController extends Controller
 {
     public function index() {
-        $questions = Question::all();
+        $questions = Question::withCount("answer")->paginate(8);
         return view('questions',compact('questions'));
     }
     public function create() {

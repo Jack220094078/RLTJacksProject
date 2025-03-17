@@ -7,8 +7,20 @@ use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller
 {
-    public function index() {
-        $questions = Question::withCount("answer")->paginate(8);
+    public function index($sort = null) {
+        switch($sort)  {
+            case 'alphabetical':
+                $questions = Question::withCount("answer")->orderBy('questiontext')->paginate(8);
+            break;
+            case 'latest':
+                $questions = Question::withCount("answer")->orderBy('created_at')->paginate(8);
+            break;            
+            case 'upvotes':
+                $questions = Question::withCount("answer")->orderByDesc('upVotes')->paginate(8);
+            break;
+            default:
+                $questions = Question::withCount("answer")->paginate(8);
+        }
         return view('questions',compact('questions'));
     }
     public function create() {
@@ -28,7 +40,7 @@ class QuestionController extends Controller
         return redirect()->route('Q&A')->with('success','question_created');
     }
     public function single_question($id) {
-        $question = Question::find($id);
+        $question = Question::with('answer')->find($id);
         return view('question',compact('question'));
+        }
     }
-}

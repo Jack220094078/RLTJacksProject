@@ -11,7 +11,7 @@ class AnswerController extends Controller
 {
     public function submit(Request $request) {
         $validated = $request->validate([
-            'answer'=> 'required |min:10',
+            'answer'=> 'required',
         ]);
         $answer = Answer::create([
             'answer' => $request['answer'],
@@ -19,6 +19,7 @@ class AnswerController extends Controller
             'user_id' => Auth::id(),
             'upVotes'=> 0 ,
         ]);
-}
+        return redirect()->back()->with("success","Answer Submitted Successfully");
+    }
 
 }

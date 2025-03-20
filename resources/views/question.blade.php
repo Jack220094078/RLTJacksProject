@@ -2,8 +2,8 @@
 <div class="d-flex flex-column" id="content-wrapper">
     <div id="content">
         @include('layouts.navigation')
-        <div class="container-fluid">
-            <div class="card shadow-sm mb-4 p-3">
+        <div class="container-fluid d-flex flex-column">
+            <div class="card row-md-3 shadow-sm p-3">
                 <div class="d-flex">
                     <!-- Upvote/Downvote Section -->
                     <div class="d-flex flex-column align-items-center align-self-center me-3">
@@ -15,7 +15,6 @@
                             <i class="fas fa-arrow-down"></i>
                         </button>
                     </div>
-
                     <!-- Question Content -->
                     <div class="flex-grow-1">
                         <h4 class="card-title fw-bold">{{ $question->questiontext }}</h4>
@@ -23,7 +22,25 @@
                     </div>
                 </div>
             </div>
+            @auth
+                <div class="d-flex justify-content-between mt-4">
+                    <h4> Answer Here: </h4>
+                    <button class="btn btn-primary" type="submit" form="answerForm">Submit</button>
+                </div>
+
+                <div class="card row-md-9 rounded">
+                    <form id="answerForm" action="{{ route('answer.submit') }}" method="POST">
+                        @csrf
+                        <input name="question" value="{{ $question->id }}"hidden>
+                        <textarea class="w-100 rounded" rows="3" name="answer" autofocus>
+
+                    </textarea>
+                    </form>
+                </div>
+            @endauth
         </div>
+
+
         <section class="position-relative py-4 py-xl-5 d-flex flex-column align-items-center">
             @if (isset($question->answer) && $question->answer->count() > 0)
                 @foreach ($question->answer as $answer)
@@ -35,7 +52,7 @@
                                         <button class="btn btn-outline-secondary btn-sm">
                                             <i class="fas fa-arrow-up"></i>
                                         </button>
-                                        <span class="fw-bold my-1">{{ $answer->upVotes }}</span>
+                                        <span class="fw-bold my-1">{{ $answer->upvotes }}</span>
                                         <button class="btn btn-outline-secondary btn-sm">
                                             <i class="fas fa-arrow-down"></i>
                                         </button>

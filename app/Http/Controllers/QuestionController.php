@@ -35,7 +35,6 @@ class QuestionController extends Controller
             'questionbody' => $request['questionbody'],
             'user_id' => Auth::id(),
             'questiontext'=> $request['questiontext'],
-            'upVotes'=> 0 ,
         ]);
         return redirect()->route('Q&A')->with('success','question_created');
     }
@@ -44,3 +43,4 @@ class QuestionController extends Controller
         return view('question',compact('question'));
         }
     }
+

@@ -25,4 +25,13 @@ class Answer extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+    public function vote() {
+        return $this->hasMany(Vote::class);
+    }
+    public function upvote() {
+        return $this->vote()->where('value', 1);
+    }
+    public function downvote() {
+        return $this->vote()->where('value', -1);
+    }
 }

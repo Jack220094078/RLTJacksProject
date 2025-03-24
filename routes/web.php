@@ -3,7 +3,11 @@
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
+<<<<<<< Updated upstream
 use GuzzleHttp\Promise\Create;
+=======
+use App\Http\Controllers\VoteController;
+>>>>>>> Stashed changes
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UserController::class,'index'] )->name('home');
@@ -17,6 +21,7 @@ Route::name("Q&A")->group(function () {
     Route::get("/question/create", [QuestionController::class,"create"])->name(".create") -> middleware("auth");
     Route::post("/questions/submit",[QuestionController::class,"submit"])->name(".submit");
     Route::get("/question/{id?}", [QuestionController::class,"single_question"]) ->name(".question");
+    Route::post("/upvotes", [VoteController::class,"upvote"]) ->name(".upvote");
 });
 Route::name("answer")->group (function (){
     Route::post("/answer/Create", [AnswerController::class,"submit"])->name(".submit");

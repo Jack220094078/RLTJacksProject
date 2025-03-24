@@ -13,7 +13,6 @@ class Question extends Model
     protected $fillable = [
         'user_id',
         'questiontext',
-        'upVotes',
         'questionbody',
     ];
     // Relationship to User 
@@ -22,5 +21,14 @@ class Question extends Model
     }
     public function answer() {
         return $this->hasMany(Answer::class);
+    }
+    public function vote() {
+        return $this->hasMany(Vote::class);
+    }
+    public function upvote() {
+        return $this->vote()->where('value', 1);
+    }
+    public function downvote() {
+        return $this->vote()->where('value', -1);
     }
 }

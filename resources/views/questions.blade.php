@@ -44,14 +44,17 @@
                                                     class="d-flex flex-column align-items-center align-self-center me-3">
                                                     <form id="updownvotes" method="POST"
                                                         action="{{ route('Q&A.upvote') }}">
-                                                        <button id="upvote"
+                                                        @csrf
+                                                        <input name="question" value="{{ $question->id }}"hidden>
+                                                        <button id="upvote" value="1"
                                                             class ="btn btn-outline-secondary btn-sm">
                                                             <i class="fas fa-arrow-up"></i>
                                                         </button>
                                                         <span id="score"
                                                             class="fw-bold my-1">{{ $question->upVotes }}</span>
                                                         <!-- Placeholder for vote count -->
-                                                        <button id="downvote" class="btn btn-outline-secondary btn-sm">
+                                                        <button id="downvote"value="-1"
+                                                            class="btn btn-outline-secondary btn-sm">
                                                             <i class="fas fa-arrow-down"></i>
                                                         </button>
                                                     </form>

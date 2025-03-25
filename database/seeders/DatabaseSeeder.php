@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\User;
+use App\Models\Vote;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
         Question::factory(20)->create();
         Answer::factory(150)->create();  
+        Vote::factory(300)->create();
 
     }
 }

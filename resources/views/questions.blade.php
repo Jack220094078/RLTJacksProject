@@ -33,50 +33,59 @@
                         @if (isset($questions) && $questions->count() > 0)
                             @foreach ($questions as $question)
                                 <div class="container position-relative">
-                                    <!--    <a class="text-decoration-none"
-                                        href="{{ route('Q&A.question', ['id' => $question->id]) }}"> -->
-                                    <div class="row d-flex justify-content-center">
+                                    <a class="text-decoration-none"
+                                        href="{{ route('Q&A.question', ['id' => $question->id]) }}">
+                                        <div class="row d-flex justify-content-center">
 
-                                        <div class="card shadow border-left-primary py-2 col-md-11"
-                                            style="margin-right: 2px;">
-                                            <div class="card-body d-flex align-items-center">
-                                                <div
-                                                    class="d-flex flex-column align-items-center align-self-center me-3">
-                                                    <form id="updownvotes" method="POST"
-                                                        action="{{ route('Q&A.upvote') }}">
-                                                        @csrf
-                                                        <input name="question" value="{{ $question->id }}"hidden>
-                                                        <button id="upvote" value="1"
-                                                            class ="btn btn-outline-secondary btn-sm">
-                                                            <i class="fas fa-arrow-up"></i>
-                                                        </button>
-                                                        <span id="score"
-                                                            class="fw-bold my-1">{{ $question->upVotes }}</span>
-                                                        <!-- Placeholder for vote count -->
-                                                        <button id="downvote"value="-1"
-                                                            class="btn btn-outline-secondary btn-sm">
-                                                            <i class="fas fa-arrow-down"></i>
-                                                        </button>
-                                                    </form>
+                                            <div class="card shadow border-left-primary py-2 col-md-11"
+                                                style="margin-right: 2px;">
+                                                <div class="card-body d-flex align-items-center">
+                                                    @auth
+                                                        <div
+                                                            class="d-flex flex-column align-items-center align-self-center me-3">
+                                                            <form id="upvoteForm" method="POST"
+                                                                action="{{ route('Q&A.upvote') }}">
+                                                                @csrf
+                                                                <input name="question" value="{{ $question->id }}"hidden>
+                                                                <input name="vote" value="1"hidden>
+                                                                <button id="upvote" type="submit"
+                                                                    class ="btn btn-outline-secondary btn-sm">
+                                                                    <i class="fas fa-arrow-up"></i>
+                                                                </button>
+                                                            </form>
+                                                            <span id="score"
+                                                                class="fw-bold my-1">{{ $question->total_votes }}</span>
+                                                            <!-- Placeholder for vote count -->
+                                                            <form id="downvoteForm" method="POST"
+                                                                action="{{ route('Q&A.upvote') }}">
+                                                                @csrf
+                                                                <input name="question" value="{{ $question->id }}"hidden>
+                                                                <input name="vote" value="-1"hidden>
+                                                                <button id="downvote" type="submit"
+                                                                    class="btn btn-outline-secondary btn-sm">
+                                                                    <i class="fas fa-arrow-down"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endauth
+                                                    </div>
+                                                    <div>
+                                                        <h1
+                                                            style="font-size: 25px;color: var(--bs-emphasis-color);font-weight: bold;height: 80px;">
+                                                            {{ $question->questiontext }}</h1>
+                                                        <strong>{{ $question->answer_count }}</strong><span
+                                                            style="color: var(--bs-emphasis-color);"><strong>
+                                                                Answers</strong></span></span>
+                                                    </div>
                                                 </div>
                                                 <div>
-                                                    <h1
-                                                        style="font-size: 25px;color: var(--bs-emphasis-color);font-weight: bold;height: 80px;">
-                                                        {{ $question->questiontext }}</h1>
-                                                    <strong>{{ $question->answer_count }}</strong><span
-                                                        style="color: var(--bs-emphasis-color);"><strong>
-                                                            Answers</strong></span></span>
                                                 </div>
                                             </div>
-                                            <div>
+
+                                            <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+                                                <div class="card mb-5"></div>
                                             </div>
                                         </div>
-
-                                        <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4">
-                                            <div class="card mb-5"></div>
-                                        </div>
-                                    </div>
-                                    <!--</a>-->
+                                    </a>
                                 </div>
                             @endforeach
                         @else
@@ -140,6 +149,42 @@
             downvoteBtn.className = 'btn btn-primary'
         }
         updateScoreDisplay();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const scoreElement = document.getElementById("score");
+
+        function sendVote(formId, voteValue) {
+            const form = document.getElementById(formId);
+            const formData = new FormData(form);
+
+            fetch("{{ route('Q&A.upvote') }}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value,
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        scoreElement.innerText = data.newVoteCount; // Update score dynamically
+                    } else {
+                        alert("Error submitting vote!");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        document.getElementById("upvoteForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            sendVote("upvoteForm", 1);
+        });
+
+        document.getElementById("downvoteForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            sendVote("downvoteForm", -1);
+        });
     });
 </script>
 

@@ -10,16 +10,16 @@ class QuestionController extends Controller
     public function index($sort = null) {
         switch($sort)  {
             case 'alphabetical':
-                $questions = Question::withCount("answer")->orderBy('questiontext')->paginate(8);
+                $questions = Question::withCount("answer")->withSum("vote as total_votes", 'value')->orderBy('questiontext')->paginate(8);
             break;
             case 'latest':
-                $questions = Question::withCount("answer")->orderBy('created_at')->paginate(8);
+                $questions = Question::withCount("answer")->withSum("vote as total_votes", 'value')->orderBy('created_at')->paginate(8);
             break;            
             case 'upvotes':
-                $questions = Question::withCount("answer")->orderByDesc('upVotes')->paginate(8);
+                $questions = Question::withCount("answer")->withSum("vote as total_votes", 'value')->orderByDesc('total_votes')->paginate(8);
             break;
             default:
-                $questions = Question::withCount("answer")->paginate(8);
+                $questions = Question::withCount("answer")->withSum("vote as total_votes", 'value')->paginate(8);
         }
         return view('questions',compact('questions'));
     }
@@ -39,7 +39,7 @@ class QuestionController extends Controller
         return redirect()->route('Q&A')->with('success','question_created');
     }
     public function single_question($id) {
-        $question = Question::with('answer')->find($id);
+        $question = Question::with(['answer.vote'])->find($id);
         return view('question',compact('question'));
         }
     }

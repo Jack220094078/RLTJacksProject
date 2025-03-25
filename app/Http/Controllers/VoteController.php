@@ -9,21 +9,19 @@ use Illuminate\Support\Facades\Auth;
 class VoteController extends Controller
 {
     public function addVote(Request $request){
-         return dd($request);
-        $type = $request['value'];
-        if($type === "question"){
-            $vote = Vote::create([
+        if($request['question']){
+            $vote = Vote::updateOrCreate([
                 'question_id' => $request['question'],
-                'value' => $request['value'],
-                'user_id' => Auth::id(),
+                'user_id' => Auth::id()],[
+                'value' => $request['vote'],
             ]);   
         }
         else
         {
-            $vote = Vote::create([
+            $vote = Vote::updateOrCreate([
                 'answer_id' => $request['answer'],
-                'value' => $request['value'],
-                'user_id' => Auth::id(),
+                'user_id' => Auth::id()],[
+                'value' => $request['vote'],
             ]);}
 }
 }

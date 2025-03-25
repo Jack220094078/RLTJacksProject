@@ -48,20 +48,36 @@
                         <div class="row d-flex justify-content-center">
                             <div class="card shadow border-left-primary py-2 col-md-11" style="margin-right: 2px;">
                                 <div class="card-body d-flex align-items-center">
-                                    <div class="d-flex flex-column align-items-center align-self-center me-3">
-                                        <button class="btn btn-outline-secondary btn-sm">
-                                            <i class="fas fa-arrow-up"></i>
-                                        </button>
-                                        <span class="fw-bold my-1">{{ $answer->upvotes }}</span>
-                                        <button class="btn btn-outline-secondary btn-sm">
-                                            <i class="fas fa-arrow-down"></i>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <h1
-                                            style="font-size: 25px;color: var(--bs-emphasis-color);font-weight: bold;height: 80px;">
-                                            {{ $answer->answer }}</h1>
-                                    </div>
+                                    @auth
+                                        <div class="d-flex flex-column align-items-center align-self-center me-3">
+                                            <form id="upvoteForm" method="POST" action="{{ route('Q&A.upvote') }}">
+                                                @csrf
+                                                <input name="answer" value="{{ $answer->id }}"hidden>
+                                                <input name="vote" value="1"hidden>
+                                                <button id="upvote" type="submit"
+                                                    class ="btn btn-outline-secondary btn-sm">
+                                                    <i class="fas fa-arrow-up"></i>
+                                                </button>
+                                            </form>
+                                            <span id="score"
+                                                class="fw-bold my-1">{{ $answer->vote->sum('value') }}</span>
+                                            <!-- Placeholder for vote count -->
+                                            <form id="downvoteForm" method="POST" action="{{ route('Q&A.upvote') }}">
+                                                @csrf
+                                                <input name="answer" value="{{ $answer->id }}"hidden>
+                                                <input name="vote" value="-1"hidden>
+                                                <button id="downvote" type="submit"
+                                                    class="btn btn-outline-secondary btn-sm">
+                                                    <i class="fas fa-arrow-down"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endauth
+
+                                    <h1
+                                        style="font-size: 25px;color: var(--bs-emphasis-color);font-weight: bold;height: 80px;">
+                                        {{ $answer->answer }}</h1>
+
                                 </div>
                                 <div>
                                 </div>
@@ -88,5 +104,42 @@
 </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
 </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const scoreElement = document.getElementById("score");
+
+        function sendVote(formId, voteValue) {
+            const form = document.getElementById(formId);
+            const formData = new FormData(form);
+
+            fetch("{{ route('Q&A.upvote') }}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value,
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        scoreElement.innerText = data.newVoteCount; // Update score dynamically
+                    } else {
+                        alert("Error submitting vote!");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        document.getElementById("upvoteForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            sendVote("upvoteForm", 1);
+        });
+
+        document.getElementById("downvoteForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            sendVote("downvoteForm", -1);
+        });
+    });
+</script>
 
 </html>

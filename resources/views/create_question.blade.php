@@ -14,9 +14,9 @@
                                     @csrf
                                     <div class="mb-3">
                                         <input class="form-control form-control-user" type="text"
-                                            placeholder="Enter Question Title..." name="questiontext">
+                                            placeholder="Enter Question Title..." name="questiontext" required>
                                         <label class="form-label">Enter Question Body</label>
-                                        <textarea class="form-control" name="questionbody" maxlength="100" placeholder="Enter your Question Body Here"></textarea>
+                                        <textarea class="form-control" name="questionbody" maxlength="100" placeholder="Enter your Question Body Here" required></textarea>
                                     </div>
                                     <div class="mb-3"></div>
                                     <div class="mb-3">

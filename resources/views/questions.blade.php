@@ -41,6 +41,7 @@
                                                 style="margin-right: 2px;">
                                                 <div class="card-body d-flex align-items-center">
                                                     @auth
+
                                                         <div
                                                             class="d-flex flex-column align-items-center align-self-center me-3">
                                                             <form id="upvoteForm" method="POST"
@@ -49,12 +50,12 @@
                                                                 <input name="question" value="{{ $question->id }}"hidden>
                                                                 <input name="vote" value="1"hidden>
                                                                 <button id="upvote" type="submit"
-                                                                    class ="btn btn-outline-secondary btn-sm">
+                                                                    class="{{ $question->user_voted == 1 ? 'btn btn-primary' : 'btn btn-outline-secondary btn-sm' }}">
                                                                     <i class="fas fa-arrow-up"></i>
                                                                 </button>
                                                             </form>
                                                             <span id="score"
-                                                                class="fw-bold my-1">{{ $question->total_votes }}</span>
+                                                                class="fw-bold my-1">{{ $question->total_votes ?? 0 }}</span>
                                                             <!-- Placeholder for vote count -->
                                                             <form id="downvoteForm" method="POST"
                                                                 action="{{ route('Q&A.upvote') }}">
@@ -62,12 +63,13 @@
                                                                 <input name="question" value="{{ $question->id }}"hidden>
                                                                 <input name="vote" value="-1"hidden>
                                                                 <button id="downvote" type="submit"
-                                                                    class="btn btn-outline-secondary btn-sm">
+                                                                    class="{{ $question->user_voted == -1 ? 'btn btn-primary' : 'btn btn-outline-secondary btn-sm' }}">
                                                                     <i class="fas fa-arrow-down"></i>
                                                                 </button>
                                                             </form>
-                                                        @endauth
-                                                    </div>
+                                                        </div>
+                                                    @endauth
+
                                                     <div>
                                                         <h1
                                                             style="font-size: 25px;color: var(--bs-emphasis-color);font-weight: bold;height: 80px;">
@@ -115,20 +117,18 @@
         scoreDisplay.textContent = score
     }
 
+
     upvoteBtn.addEventListener('click', () => {
         if (currentVote === 'up') {
             // Remove upvote
             score -= 1;
             currentVote = null;
-            upvoteBtn.className = 'btn btn-outline-secondary btn-sm'
         } else {
             if (currentVote === "down") {
                 score += 1; // Remove previous downvote
-                downvoteBtn.className = 'btn btn-outline-secondary btn-sm'
             }
             score += 1;
             currentVote = 'up';
-            upvoteBtn.className = 'btn btn-primary'
         }
         updateScoreDisplay();
     });
@@ -138,15 +138,12 @@
             // Remove downvote
             score += 1;
             currentVote = null;
-            downvoteBtn.className = 'btn btn-outline-secondary btn-sm'
         } else {
             if (currentVote === "up") {
                 score -= 1;
-                upvoteBtn.className = 'btn btn-outline-secondary btn-sm'
             }
             score -= 1; // Remove previous upvote
             currentVote = 'down';
-            downvoteBtn.className = 'btn btn-primary'
         }
         updateScoreDisplay();
     });

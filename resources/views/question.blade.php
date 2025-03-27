@@ -105,6 +105,54 @@
 </div>
 </body>
 <script>
+    let currentVote = null; // null, "up", or "down
+
+    const upvoteBtn = document.getElementById('upvote');
+    const downvoteBtn = document.getElementById('downvote');
+    const scoreDisplay = document.getElementById('score');
+
+    let score = parseInt(scoreDisplay.textContent);
+
+    function updateScoreDisplay() {
+        scoreDisplay.textContent = score
+    }
+
+    upvoteBtn.addEventListener('click', () => {
+        if (currentVote === 'up') {
+            // Remove upvote
+            score -= 1;
+            currentVote = null;
+            upvoteBtn.className = 'btn btn-outline-secondary btn-sm'
+        } else {
+            if (currentVote === "down") {
+                score += 1; // Remove previous downvote
+                downvoteBtn.className = 'btn btn-outline-secondary btn-sm'
+            }
+            score += 1;
+            currentVote = 'up';
+            upvoteBtn.className = 'btn btn-primary'
+        }
+        updateScoreDisplay();
+    });
+
+    downvoteBtn.addEventListener('click', () => {
+        if (currentVote === 'down') {
+            // Remove downvote
+            score += 1;
+            currentVote = null;
+            downvoteBtn.className = 'btn btn-outline-secondary btn-sm'
+        } else {
+            if (currentVote === "up") {
+                score -= 1;
+                upvoteBtn.className = 'btn btn-outline-secondary btn-sm'
+            }
+            score -= 1; // Remove previous upvote
+            currentVote = 'down';
+            downvoteBtn.className = 'btn btn-primary'
+        }
+        updateScoreDisplay();
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
         const scoreElement = document.getElementById("score");
 

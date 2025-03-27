@@ -20,7 +20,6 @@ class QuestionFactory extends Factory
         return [
             'user_id' => User::inRandomOrder()->first()->id,
             'questiontext' => fake()->text(100),
-            'upVotes' => fake()->randomNumber(3, false),
             'questionbody' =>fake()->text(200)
         ];
     }

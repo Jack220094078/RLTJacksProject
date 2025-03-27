@@ -52,7 +52,7 @@ class UserController extends Controller
             return redirect()->intended(route('home'));
         };
 
-        //return redirect()->back()->withErrors(['login'=> 'Email or Password Invalid']);
+        return redirect()->back()->withErrors(['login'=> 'Email or Password Invalid']);
     }
     public function logout(Request $request) {
         Auth::logout();

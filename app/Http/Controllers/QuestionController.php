@@ -8,19 +8,23 @@ use Illuminate\Support\Facades\Auth;
 class QuestionController extends Controller
 {
     public function index($sort = null) {
+        $questions = Question::withCount("answer")->withCount(['vote as user_voted' => function($query){$query->where('user_id',Auth::id())->select('value');}])->withSum("vote as total_votes", 'value');
+       
         switch($sort)  {
             case 'alphabetical':
-                $questions = Question::withCount("answer")->withSum("vote as total_votes", 'value')->orderBy('questiontext')->paginate(8);
+             $questions->orderBy('questiontext');
             break;
             case 'latest':
-                $questions = Question::withCount("answer")->withSum("vote as total_votes", 'value')->orderBy('created_at')->paginate(8);
-            break;            
-            case 'upvotes':
-                $questions = Question::withCount("answer")->withSum("vote as total_votes", 'value')->orderByDesc('total_votes')->paginate(8);
+                $questions->orderBy('created_at');
             break;
-            default:
-                $questions = Question::withCount("answer")->withSum("vote as total_votes", 'value')->paginate(8);
+            case 'upvotes':
+                $questions->orderByDesc('total_votes');
+            break;
+
         }
+       $questions = $questions->paginate(8);
+
+
         return view('questions',compact('questions'));
     }
     public function create() {

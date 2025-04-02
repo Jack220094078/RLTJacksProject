@@ -27,6 +27,20 @@ class QuestionController extends Controller
 
         return view('questions',compact('questions'));
     }
+    public function teacherView($sort = null) {
+        $questions = Question::withCount("answer")->withCount(['vote as user_voted' => function($query){$query->where('user_id',Auth::id())->select('value');}])->withSum("vote as total_votes", 'value');
+       
+
+         
+        $questions->orderByDesc('total_votes');
+            
+
+        
+       $questions = $questions->paginate(8);
+
+
+        return view('teacher',compact('questions'));
+    }
     public function create() {
         return view('create_question');
     }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoteController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UserController::class,'index'] )->name('home');
@@ -22,9 +23,10 @@ Route::name("Q&A")->group(function () {
 Route::name("answer")->group (function (){
     Route::post("/answer/Create", [AnswerController::class,"submit"])->name(".submit");
 });
-Route::get('/joinroom', function () {
-    return view('joinroom');
-})->name('joinroom');
+
+Route::get("/teacher", [QuestionController::class, 'teacherView'])->name('teacher')->middleware([AdminMiddleware::class]);
+
+Route::get('/joinroom', function () {return view('joinroom');})->name('joinroom');
 Route::get('/login', function () {
     return view('login');
 })->name('login');

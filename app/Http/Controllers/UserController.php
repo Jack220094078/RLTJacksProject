@@ -49,6 +49,10 @@ class UserController extends Controller
         if(Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            if(Auth::user()->isadmin){
+                return redirect()->route('teacher');
+            }
+            
             return redirect()->intended(route('home'));
         };
 

@@ -8,7 +8,7 @@
                 <div class="col-lg-4">
                     <div class="card mb-3">
                         <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4"
-                                src="assets/img/User.png" width="160" height="160">
+                                src="{{ asset('assets/img/User.png') }}" width="160" height="160">
                             <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Change
                                     Photo</button></div>
                         </div>

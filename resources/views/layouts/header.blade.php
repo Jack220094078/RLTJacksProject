@@ -18,8 +18,8 @@
             style="text-align: left;">
             <div class="container-fluid d-flex flex-column p-0"><a
                     class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0"
-                    href="#"><img src="assets/img/Logo%20for%20Project.jpg" width="77" height="78"
-                        style="text-align: left;">
+                    href="#"><img src="{{ asset('assets/img/Logo%20for%20Project.jpg') }}" width="77"
+                        height="78" style="text-align: left;">
                     <div class="sidebar-brand-icon rotate-n-15"></div>
                     <div class="sidebar-brand-text mx-3"></div>
                 </a>
@@ -27,7 +27,7 @@
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link active" href="{{ route('home') }}"
                             style="text-align: left;"><i class="fas fa-home"
-                                style="background: url(&quot;assets/img/Home%20icon.png&quot;);font-size: 13px;"></i><span>Home</span></a>
+                                style="background: url({{ asset('assets/img/Home%20icon.png') }};font-size: 13px;"></i><span>Home</span></a>
                     </li>
                     <li class="nav-item">
                         @guest
@@ -50,7 +50,6 @@
                                 Section</span></a>
                     </li>
                 </ul>
-                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
-                        id="sidebarToggle" type="button"></button></div>
+
             </div>
         </nav>

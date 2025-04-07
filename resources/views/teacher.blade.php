@@ -36,13 +36,29 @@
                 <div class="card-header py-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <p class="text-primary m-0 fw-bold">Questions</p>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Sort By
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                <li><a class="dropdown-item"
+                                        href="{{ route('teacher', ['sort' => 'alphabetical']) }}">Alphabetical</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('teacher', ['sort' => 'latest']) }}">Latest</a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('teacher', ['sort' => 'upvotes']) }}">Votes</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <section class="position-relative py-4 py-xl-5 d-flex flex-column align-items-center">
                         @if (isset($questions) && $questions->count() > 0)
                             @foreach ($questions as $question)
                                 <div class="container position-relative">
                                     <a class="text-decoration-none"
-                                        href="{{ route('Q&A.question', ['id' => $question->id]) }}">
+                                        href="{{ route('teacher.question', ['id' => $question->id]) }}">
                                         <div class="row d-flex justify-content-center">
 
                                             <div class="card shadow border-left-primary py-2 col-md-11"

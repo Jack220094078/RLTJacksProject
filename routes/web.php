@@ -15,7 +15,7 @@ Route::name('users')->group(function () {
 });
 Route::name("Q&A")->group(function () {
     Route::get("/questions/{sort?}", [QuestionController::class,"index"]);
-    Route::get("/question/create", [QuestionController::class,"create"])->name(".create") -> middleware("auth");
+    Route::get("/question/create/", [QuestionController::class,"create"])->name(".create") -> middleware("auth");
     Route::post("/questions/submit",[QuestionController::class,"submit"])->name(".submit");
     Route::get("/question/{id?}", [QuestionController::class,"single_question"]) ->name(".question");
     Route::post("/questions/vote", [VoteController::class,"addVote"]) ->name(".upvote");
@@ -24,7 +24,8 @@ Route::name("answer")->group (function (){
     Route::post("/answer/Create", [AnswerController::class,"submit"])->name(".submit");
 });
 
-Route::get("/teacher", [QuestionController::class, 'teacherView'])->name('teacher')->middleware([AdminMiddleware::class]);
+Route::get("/teacher/{sort?}", [QuestionController::class, 'teacherView'])->name('teacher')->middleware([AdminMiddleware::class]);
+Route::get("/teacher/question/{id?}", [QuestionController::class, 'teacherQuestion'])->name('teacher.question')->middleware([AdminMiddleware::class]);
 
 Route::get('/joinroom', function () {return view('joinroom');})->name('joinroom');
 Route::get('/login', function () {

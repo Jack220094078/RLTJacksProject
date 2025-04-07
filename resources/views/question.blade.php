@@ -10,7 +10,8 @@
                         <button class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-arrow-up"></i>
                         </button>
-                        <span class="fw-bold my-1">{{ $question->upVotes }}</span> <!-- Placeholder for vote count -->
+                        <span class="fw-bold my-1">{{ $question->total_votes }}</span>
+                        <!-- Placeholder for vote count -->
                         <button class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-arrow-down"></i>
                         </button>

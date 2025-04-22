@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class VoteController extends Controller
 {
+    
     public function addVote(Request $request){
         if($request['question']){
             $vote = Vote::updateOrCreate([
@@ -23,5 +24,6 @@ class VoteController extends Controller
                 'user_id' => Auth::id()],[
                 'value' => $request['vote'],
             ]);}
+            return redirect()->back();
 }
 }

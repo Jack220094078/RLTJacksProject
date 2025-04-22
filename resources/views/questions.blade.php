@@ -44,29 +44,31 @@
 
                                                         <div
                                                             class="d-flex flex-column align-items-center align-self-center me-3">
-                                                            <form id="upvoteForm" method="POST"
+                                                            <form id="upvoteForm-{{ $question->id }}" method="POST"
                                                                 action="{{ route('Q&A.upvote') }}">
                                                                 @csrf
-                                                                <input name="question" value="{{ $question->id }}"hidden>
-                                                                <input name="vote" value="1"hidden>
-                                                                <button id="upvote" type="submit"
+                                                                <input name="question" value="{{ $question->id }}" hidden>
+                                                                <input name="vote" value="1" hidden>
+                                                                <button type="submit"
                                                                     class="{{ $question->user_voted == 1 ? 'btn btn-primary' : 'btn btn-outline-secondary btn-sm' }}">
                                                                     <i class="fas fa-arrow-up"></i>
                                                                 </button>
                                                             </form>
-                                                            <span id="score"
+
+                                                            <span id="score-{{ $question->id }}"
                                                                 class="fw-bold my-1">{{ $question->total_votes ?? 0 }}</span>
-                                                            <!-- Placeholder for vote count -->
-                                                            <form id="downvoteForm" method="POST"
+
+                                                            <form id="downvoteForm-{{ $question->id }}" method="POST"
                                                                 action="{{ route('Q&A.upvote') }}">
                                                                 @csrf
-                                                                <input name="question" value="{{ $question->id }}"hidden>
-                                                                <input name="vote" value="-1"hidden>
-                                                                <button id="downvote" type="submit"
+                                                                <input name="question" value="{{ $question->id }}" hidden>
+                                                                <input name="vote" value="-1" hidden>
+                                                                <button type="submit"
                                                                     class="{{ $question->user_voted == -1 ? 'btn btn-primary' : 'btn btn-outline-secondary btn-sm' }}">
                                                                     <i class="fas fa-arrow-down"></i>
                                                                 </button>
                                                             </form>
+
                                                         </div>
                                                     @endauth
 
@@ -149,38 +151,34 @@
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-        const scoreElement = document.getElementById("score");
+        const voteForms = document.querySelectorAll("form[id^='upvoteForm-'], form[id^='downvoteForm-']");
 
-        function sendVote(formId, voteValue) {
-            const form = document.getElementById(formId);
-            const formData = new FormData(form);
+        voteForms.forEach(form => {
+            form.addEventListener("submit", function(e) {
+                e.preventDefault();
 
-            fetch("{{ route('Q&A.upvote') }}", {
-                    method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value,
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        scoreElement.innerText = data.newVoteCount; // Update score dynamically
-                    } else {
-                        alert("Error submitting vote!");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-        }
+                const formData = new FormData(form);
+                const voteValue = form.querySelector("input[name='vote']").value;
+                const questionId = form.querySelector("input[name='question']").value;
+                const scoreElement = document.getElementById(`score-${questionId}`);
 
-        document.getElementById("upvoteForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            sendVote("upvoteForm", 1);
-        });
-
-        document.getElementById("downvoteForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            sendVote("downvoteForm", -1);
+                fetch("{{ route('Q&A.upvote') }}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": form.querySelector('input[name="_token"]').value
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            scoreElement.innerText = data.newVoteCount;
+                        } else {
+                            alert("Vote failed.");
+                        }
+                    })
+                    .catch(error => console.error("Vote error:", error));
+            });
         });
     });
 </script>

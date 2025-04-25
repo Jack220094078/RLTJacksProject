@@ -6,16 +6,34 @@
             <div class="card row-md-3 shadow-sm p-3">
                 <div class="d-flex">
                     <!-- Upvote/Downvote Section -->
-                    <div class="d-flex flex-column align-items-center align-self-center me-3">
-                        <button class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-arrow-up"></i>
-                        </button>
-                        <span class="fw-bold my-1">{{ $question->total_votes }}</span>
-                        <!-- Placeholder for vote count -->
-                        <button class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-arrow-down"></i>
-                        </button>
-                    </div>
+                    @auth
+
+                        <div class="d-flex flex-column align-items-center align-self-center me-3">
+                            <form id="upvoteForm-{{ $question->id }}" method="POST" action="{{ route('Q&A.upvote') }}">
+                                @csrf
+                                <input name="question" value="{{ $question->id }}" hidden>
+                                <input name="vote" value="1" hidden>
+                                <button type="submit"
+                                    class="{{ $question->user_voted == 1 ? 'btn btn-primary' : 'btn btn-outline-secondary btn-sm' }}">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                            </form>
+
+                            <span id="score-{{ $question->id }}"
+                                class="fw-bold my-1">{{ $question->total_votes ?? 0 }}</span>
+
+                            <form id="downvoteForm-{{ $question->id }}" method="POST" action="{{ route('Q&A.upvote') }}">
+                                @csrf
+                                <input name="question" value="{{ $question->id }}" hidden>
+                                <input name="vote" value="-1" hidden>
+                                <button type="submit"
+                                    class="{{ $question->user_voted == -1 ? 'btn btn-primary' : 'btn btn-outline-secondary btn-sm' }}">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                            </form>
+
+                        </div>
+                    @endauth
                     <!-- Question Content -->
                     <div class="flex-grow-1">
                         <h4 class="card-title fw-bold">{{ $question->questiontext }}</h4>
@@ -57,7 +75,7 @@
                                                 <input name="answer" value="{{ $answer->id }}"hidden>
                                                 <input name="vote" value="1"hidden>
                                                 <button id="upvote-{{ $answer->id }}" type="submit"
-                                                    class ="btn btn-outline-secondary btn-sm">
+                                                    class ="{{ $answer->userVote?->value == 1 ? 'btn btn-primary' : 'btn btn-outline-secondary btn-sm' }}">
                                                     <i class="fas fa-arrow-up"></i>
                                                 </button>
                                             </form>
@@ -70,7 +88,7 @@
                                                 <input name="answer" value="{{ $answer->id }}"hidden>
                                                 <input name="vote" value="-1"hidden>
                                                 <button id="downvote-{{ $answer->id }}" type="submit"
-                                                    class="btn btn-outline-secondary btn-sm">
+                                                    class="{{ $answer->userVote?->value == -1 ? 'btn btn-primary' : 'btn btn-outline-secondary btn-sm' }}">
                                                     <i class="fas fa-arrow-down"></i>
                                                 </button>
                                             </form>
@@ -120,20 +138,18 @@
         scoreDisplay.textContent = score
     }
 
+
     upvoteBtn.addEventListener('click', () => {
         if (currentVote === 'up') {
             // Remove upvote
             score -= 1;
             currentVote = null;
-            upvoteBtn.className = 'btn btn-outline-secondary btn-sm'
         } else {
             if (currentVote === "down") {
                 score += 1; // Remove previous downvote
-                downvoteBtn.className = 'btn btn-outline-secondary btn-sm'
             }
             score += 1;
             currentVote = 'up';
-            upvoteBtn.className = 'btn btn-primary'
         }
         updateScoreDisplay();
     });
@@ -143,15 +159,12 @@
             // Remove downvote
             score += 1;
             currentVote = null;
-            downvoteBtn.className = 'btn btn-outline-secondary btn-sm'
         } else {
             if (currentVote === "up") {
                 score -= 1;
-                upvoteBtn.className = 'btn btn-outline-secondary btn-sm'
             }
             score -= 1; // Remove previous upvote
             currentVote = 'down';
-            downvoteBtn.className = 'btn btn-primary'
         }
         updateScoreDisplay();
     });

@@ -8,22 +8,43 @@ use Illuminate\Support\Facades\Auth;
 
 class VoteController extends Controller
 {
-    
-    public function addVote(Request $request){
-        if($request['question']){
-            $vote = Vote::updateOrCreate([
-                'question_id' => $request['question'],
-                'user_id' => Auth::id()],[
-                'value' => $request['vote'],
-            ]);   
+    public function addVote(Request $request)
+{
+    $userId = Auth::id();
+    $voteValue = $request['vote'];
+
+    if ($request['question']) {
+        $existingVote = Vote::where('question_id', $request['question'])
+            ->where('user_id', $userId)
+            ->where('value', $voteValue)
+            ->first();
+
+        if ($existingVote) {
+            $existingVote->delete(); // Remove if same vote exists
+        } else {
+            Vote::updateOrCreate(
+                ['question_id' => $request['question'], 'user_id' => $userId],
+                ['value' => $voteValue]
+            );
         }
-        else
-        {
-            $vote = Vote::updateOrCreate([
-                'answer_id' => $request['answer'],
-                'user_id' => Auth::id()],[
-                'value' => $request['vote'],
-            ]);}
-            return redirect()->back();
+    } 
+    else if ($request['answer']) {
+        $existingVote = Vote::where('answer_id', $request['answer'])
+            ->where('user_id', $userId)
+            ->where('value', $voteValue)
+            ->first();
+
+        if ($existingVote) {
+            $existingVote->delete(); // Remove if same vote exists
+        } else {
+            Vote::updateOrCreate(
+                ['answer_id' => $request['answer'], 'user_id' => $userId],
+                ['value' => $voteValue]
+            );
+        }
+    }
+
+    return redirect()->back();
 }
+
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Answer extends Model
 {
@@ -18,6 +19,8 @@ class Answer extends Model
         'upvotes'
 
     ];
+
+
     // Relationship to User 
     public function question() {
         return $this->belongTo(Question::class);
@@ -34,4 +37,16 @@ class Answer extends Model
     public function downvote() {
         return $this->vote()->where('value', -1);
     }
+    public function userVote()
+    {
+        return $this->hasOne(Vote::class)->where('user_id', Auth::id());
+    }
+
+
+    public function getUserVotedAttribute()
+    {
+        return optional($this->userVote)->value;
+    }
+    protected $appends = ['user_voted'];
+    protected $with = ['userVote']; // optional: auto-loads it every time
 }

@@ -34,10 +34,18 @@ class QuestionController extends Controller
         ]);
         return redirect()->route('Q&A')->with('success','question_created');
     }
-    public function single_question($id) {
-        $question = Question::with(['answer.vote'])->withSum("vote as total_votes", 'value')->find($id);
-        return view('question',compact('question'));
-        }
+    public function single_question($id)
+    {
+        $question = Question::with([
+            'answer' => function ($query) {
+                $query->with('userVote');
+            }
+        ])->withCount(['vote as user_voted' => function($query){$query->where('user_id',Auth::id())->select('value');}])->withSum("vote as total_votes", 'value')->find($id);
+   
+    
+        return view('question', compact('question'));
+    }
+    
 
     public function teacherQuestion($id){
         $question = Question::with(['answer.vote'])->withSum("vote as total_votes", 'value')->find($id);
